@@ -95,14 +95,5 @@ POST /api/buy-alcohol
 backend/
 ├─ server.js           # Main Express server
 ├─ package.json        # Project dependencies and scripts
-├─ .gitignore          # Ignored files (node_modules, .env, logs)
 ├─ README.md           # This file
-├─ .env.example        # Example environment variables
 ```
-
-## Future Improvements
-
-* Use **environment variables** for secrets instead of hardcoding `authServerSecret`.
-* Split routes/controllers for cleaner structure.
-* Add proper user management and database integration.
-* Implement additional endpoints for the e-shop (cart, checkout, products, etc.).
