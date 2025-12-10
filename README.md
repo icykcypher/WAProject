@@ -1,73 +1,140 @@
-# React + TypeScript + Vite
+# E-shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**E-shop** is a React and TypeScript-based web application built with Tailwind CSS, designed as a demo online store for adult products. The app integrates with **NorthAuth** for age verification and provides a simple shopping experience including browsing products, viewing details, managing a cart, and simulating purchases.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Description
 
-## React Compiler
+The application leverages React, TypeScript, and Tailwind CSS, with state management handled using React Context. Key features include:
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- **Product Catalog:** Browse a list of products with images, names, and prices.
+- **Product Cards:** Detailed product view with the ability to add items to the cart.
+- **Shopping Cart:** Add, remove, and clear items in the cart, with a simulated checkout flow.
+- **Authorization:** Integration with NorthAuth for age verification before checkout.
+- **Responsive UI:** Grid-based product layout, hover effects, gradient-styled buttons, header, and footer.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Folder Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The source code is organized by feature rather than technical layers to improve maintainability.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Client side
+```
+client/
+├── src/
+│ ├── components/
+│ │ ├── Header.tsx
+│ │ ├── Footer.tsx
+│ │ └── ProductCard.tsx
+│ ├── contexts/
+│ │ ├── CartContext.tsx
+│ │ └── SessionContext.tsx
+│ ├── hooks/
+│ │ └── useCart.tsx
+│ ├── pages/
+│ │ ├── Home.tsx
+│ │ ├── Product.tsx
+│ │ ├── Cart.tsx
+│ │ ├── About.tsx
+│ │ └── AuthRedirect.tsx
+│ ├── data/
+│ │ └── products.ts
+│ ├── App.tsx
+│ └── main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **components/** – Reusable UI components like Header, Footer, ProductCard.  
+- **contexts/** – React Contexts for managing cart state and session/user info.  
+- **hooks/** – Custom hooks such as `useCart` for accessing the cart context.  
+- **pages/** – Individual page components for routing (Home, Product, Cart, About, AuthRedirect).  
+- **data/** – Static data for products.  
+- **App.tsx** – Main router defining route-to-page mappings.  
+- **main.tsx** – React entry point mounting the app.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Technologies
+
+- **Frontend:** React, TypeScript, Tailwind CSS  
+- **State Management:** React Context  
+- **Routing:** React Router  
+- **Authentication:** NorthAuth integration  
+- **Styling:** Responsive grid, gradient buttons, hover effects  
+
+---
+
+## Requirements
+
+To run this application locally, ensure you have the following installed:
+
+- Node.js (version 16 or higher recommended)  
+- npm or yarn package manager  
+
+---
+
+
+- **components/** – Reusable UI components like Header, Footer, ProductCard.  
+- **contexts/** – React Contexts for managing cart state and session/user info.  
+- **hooks/** – Custom hooks such as `useCart` for accessing the cart context.  
+- **pages/** – Individual page components for routing (Home, Product, Cart, About, AuthRedirect).  
+- **data/** – Static data for products.  
+- **App.tsx** – Main router defining route-to-page mappings.  
+- **main.tsx** – React entry point mounting the app.
+
+---
+
+## Technologies
+
+- **Frontend:** React, TypeScript, Tailwind CSS  
+- **State Management:** React Context  
+- **Routing:** React Router  
+- **Authentication:** NorthAuth integration  
+- **Styling:** Responsive grid, gradient buttons, hover effects  
+
+---
+
+## Requirements
+
+To run this application locally, ensure you have the following installed:
+
+- Node.js (version 16 or higher recommended)  
+- npm or yarn package manager  
+
+---
+
+## Installation and Usage
+
+### Client
+
+1. Go to the `client` directory:  
+
+```bash
+cd client
 ```
+# Install dependencies:
+```bash
+npm install
+```
+
+Start the development server:
+```bash
+npm run dev
+```
+
+Build for production:
+```bash
+npm run build
+```
+# Server
+
+The application relies on NorthAuth for authentication and authorization. Make sure the NorthAuth service is running and accessible.
+
+# Notes
+
+The cart and purchase flow are simulated for demonstration purposes.
+
+Product images currently use placeholder images (https://via.placeholder.com/150) and can be replaced with real images.
+
+The app demonstrates an example of integrating an external OAuth-like service for age verification.
