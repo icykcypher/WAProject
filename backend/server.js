@@ -167,7 +167,7 @@ function validateToken(req, res, next) {
 app.delete("/carts/:userId", (req, res) => {
   const { productId } = req.body;
   const userId = req.params.userId;
-  if (!carts[userId]) return res.status(400).json({ message: "Cart not found" });
+  if (!carts[userId]) return res.status(404).json({ message: "Cart not found" });
   curcartslen = carts[userId].length
   carts[userId] = carts[userId].filter(p => p.productId !== productId);
   futurecartslen = carts[userId].length
