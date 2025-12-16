@@ -107,7 +107,7 @@ app.get("/carts/:userId", (req, res) => {
 });
 
 
-app.post("/carts/:userId/add", (req, res) => {
+app.post("/carts/:userId", (req, res) => {
   const { productId, quantity } = req.body;
   const userId = req.params.userId;
   const product = products.find(p => p.id === productId);
@@ -161,7 +161,7 @@ function validateToken(req, res, next) {
     }
 }
 
-app.post("/carts/:userId/remove", (req, res) => {
+app.delete("/carts/:userId", (req, res) => {
   const { productId } = req.body;
   const userId = req.params.userId;
   if (!carts[userId]) return res.json([]).status(400);
