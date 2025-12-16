@@ -3,11 +3,12 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const products = require("./products");
+const { use } = require("react");
 
 const app = express();
 const PORT = 5000;
 const authServerSecret = "smth";
-const PRODUCTS = [
+const products = [
     {
         id: 1,
         name: "Marlboro Gold",
@@ -153,21 +154,17 @@ app.post("/carts/:userId/remove", (req, res) => {
 });
 
 
-app.post("/api/buy-alcohol", validateToken, (req, res) => {
-    const permissions = req.capability.permissions;
-
-    if (!permissions.includes("buy_alcohol")) {
-        return res.status(403).json({
-            success: false,
-            message: "A co jako! Je ti 18?!?"
-        });
-    }
-    res.json({
-        success: true,
-        message: "permission given",
-        user: req.capability.issuedForUser
-    });
+app.post("/carts/:userId/buy", (req, res) => {
+  const userId = req.params.userId;
+  if (!carts[userId]) return res.status(400).json({ message: "Cart is empty" });
+  carts[userId].forEach(product => {
+    const { productId, quantity } = product;
+    products.find(p => p.productId === productId).quantity -= quantity;
+  });
+  carts[userId] = []
+  res.status(200).json(carts[userId]);
 });
+
 
 app.listen(PORT, () => {
     console.log(`Eshop server running on http://localhost:${PORT}`);
