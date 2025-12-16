@@ -3,7 +3,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const products = require("./products");
-const { use } = require("react");
+const userIdSrvr = 0
+const listUsers = []
 
 const app = express();
 const PORT = 5000;
@@ -66,6 +67,21 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser());
 
 const carts = {};
+
+app.get("/:UserId"), (res) => {
+    userIdSrvr += 1
+    listUsers.push({id: userIdSrvr})
+    res.json(userIdSrvr).status(200)
+}
+
+app.delete("/:UserId"), (res) => {
+    const userId = req.params.userId;
+    curlen = len(listUsers)
+    listUsers = listUsers.filter(user => user.id !== userId);
+    futurelen = len(listUsers)
+    if(curlen === futurelen) return res.status(400).json({message: "user doesnt exist"})
+    res.status(200)
+}
 
 app.get("/products", (res) => {
     if(empty(product)){
@@ -161,8 +177,8 @@ app.post("/carts/:userId/buy", (req, res) => {
     const { productId, quantity } = product;
     products.find(p => p.productId === productId).quantity -= quantity;
   });
-  carts[userId] = []
   res.status(200).json(carts[userId]);
+  carts[userId] = []
 });
 
 
