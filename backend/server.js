@@ -2,15 +2,57 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const products = require("./products");
 
 const app = express();
 const PORT = 5000;
 const authServerSecret = "smth";
+const products = [
+  {
+    id: 1,
+    name: "Camel Activate",
+    price: 150,
+    stock: 20
+  },
+  {
+    id: 2,
+    name: "Burton Original",
+    price: 160,
+    stock: 120
+  },
+  {
+    id: 3,
+    name: "Camel Silver",
+    price: 149,
+    stock: 1000
+  },
+  {
+    id: 4,
+    name: "Marlboro Gold Original",
+    price: 100,
+    stock: 5
+  }
+];
+module.exports = products;
 
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser());
 
+const carts = {};
+
+app.get("/products", (res) => {
+    if(empty(product)){
+        return res.status(404).json({ message: "no product found" });
+    }
+    res.json(products).status(200);
+});
+
+app.get("/products/:id", (req, res) => {
+  const product = products.find(p => p.id === Number(req.params.id));
+  if (!product) return res.status(404).json({ message: "Product not found" });
+  res.json(product).status(200);
+});
 
 function validateToken(req, res, next) {
     const header = req.headers.authorization;
