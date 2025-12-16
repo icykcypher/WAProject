@@ -54,6 +54,34 @@ app.get("/products/:id", (req, res) => {
   res.json(product).status(200);
 });
 
+app.get("/carts/:userId", (req, res) => {
+  const cart = carts[req.params.userId] || [];
+  if(!cart){
+    return res.status(400).json({message: "users cart not found"})
+  }
+  res.json(cart).status(200);
+});
+
+app.post("/carts/:userId/add", (req, res) => {
+  const { productId, quantity } = req.body;
+  const userId = req.params.userId;
+  const product = products.find(p => p.id === productId);
+  if (!product) return res.status(404).json({ message: "Product not found" });
+  if (quantity > product.stock) {
+    return res.status(400).json({ message: "Not enough stock" });
+  }
+  if (!carts[userId]) carts[userId] = [];
+  const productAdded = carts[userId].find(p => p.productId === productId);
+
+  if (productAdded) {
+    productAdded.quantity += quantity;
+  } else {
+    carts[userId].push({ productId, quantity });
+  }
+  res.json(carts[userId]).status(200);
+});
+
+
 function validateToken(req, res, next) {
     const header = req.headers.authorization;
     if (!header || !header.startsWith("Bearer ")) {
@@ -87,6 +115,15 @@ function validateToken(req, res, next) {
         });
     }
 }
+
+app.post("/carts/:userId/remove", (req, res) => {
+  const { productId } = req.body;
+  const userId = req.params.userId;
+  if (!carts[userId]) return res.json([]).status(400);
+  carts[userId] = carts[userId].filter(p => p.productId !== productId);
+  res.json(carts[userId]).status(200);
+});
+
 
 app.post("/api/buy-alcohol", validateToken, (req, res) => {
     const permissions = req.capability.permissions;
