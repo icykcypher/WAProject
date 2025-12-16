@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SessionProvider } from "./sessions/SessionContext";
+import { CartProvider } from "./contexts/CartContext"; 
 
-function App() {
-  const [count, setCount] = useState(0)
+import Home from "./routes/Home";
+import Product from "./routes/Product";
+import AuthCallback from "./routes/AuthCallback";
+import AuthRedirect from "./routes/AuthRedirect";
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+import About from "./pages/About";
+import Cart from "./pages/Cart";
+
+export default function App() {
+    return (
+        <SessionProvider>
+            <CartProvider> 
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/product/:id" element={<Product />} />
+                        <Route path="/auth/callback" element={<AuthCallback />} />
+                        <Route path="/auth/redirect" element={<AuthRedirect />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/cart" element={<Cart />} />
+                    </Routes>
+                </BrowserRouter>
+            </CartProvider>
+        </SessionProvider>
+    );
 }
-
-export default App
