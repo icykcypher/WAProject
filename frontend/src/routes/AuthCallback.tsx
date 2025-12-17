@@ -8,8 +8,18 @@ export default function AuthCallback() {
     const { setToken } = useSession();
 
     useEffect(() => {
-        const token = params.get("token");
-        const returnTo = params.get("returnTo") ?? "/";
+        let token = params.get("token");
+        let returnTo = params.get("returnTo") ?? "/";
+
+        if (!token && returnTo.includes("token=")) {
+            try {
+                const url = new URL("http://dummy" + returnTo); 
+                token = url.searchParams.get("token");
+                returnTo = url.pathname + url.search.replace(/token=[^&]+&?/, ""); 
+            } catch {
+                token = "";
+            }
+        }
 
         if (!token) {
             navigate("/");
@@ -17,8 +27,9 @@ export default function AuthCallback() {
         }
 
         setToken(token);
-        navigate(returnTo);
-    }, []);
+
+        navigate(returnTo, { replace: true });
+    }, [params, navigate, setToken]);
 
     return <div>Completing login…</div>;
 }

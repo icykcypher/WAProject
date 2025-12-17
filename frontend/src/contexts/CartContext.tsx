@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 export interface CartItem {
@@ -16,18 +16,31 @@ interface CartContextValue {
     clearCart: () => void;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext<CartContextValue | undefined>(undefined);
 
+const STORAGE_KEY = "eshop_cart";
+
 export function CartProvider({ children }: { children: ReactNode }) {
-    const [items, setItems] = useState<CartItem[]>([]);
+
+    // ✅ Читаем localStorage ОДИН РАЗ при инициализации
+    const [items, setItems] = useState<CartItem[]>(() => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    });
+
+    // ✅ Эффект ТОЛЬКО для синхронизации наружу
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }, [items]);
 
     const addItem = (item: Omit<CartItem, "quantity">) => {
         setItems(prev => {
-            const exists = prev.find(i => i.id === item.id);
-            if (exists) {
+            const existing = prev.find(i => i.id === item.id);
+            if (existing) {
                 return prev.map(i =>
-                    i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+                    i.id === item.id
+                        ? { ...i, quantity: i.quantity + 1 }
+                        : i
                 );
             }
             return [...prev, { ...item, quantity: 1 }];
@@ -38,7 +51,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems(prev => prev.filter(i => i.id !== id));
     };
 
-    const clearCart = () => setItems([]);
+    const clearCart = () => {
+        setItems([]);
+        localStorage.removeItem(STORAGE_KEY);
+    };
 
     return (
         <CartContext.Provider value={{ items, addItem, removeItem, clearCart }}>
@@ -46,3 +62,4 @@ export function CartProvider({ children }: { children: ReactNode }) {
         </CartContext.Provider>
     );
 }
+    

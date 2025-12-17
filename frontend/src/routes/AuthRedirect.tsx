@@ -1,19 +1,20 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 
 export default function AuthRedirect() {
-    const location = useLocation();
-    const returnTo = location.state?.returnTo ?? "/";
+    const returnTo = "/checkout";
     const [loading, setLoading] = useState(false);
 
     const handleClick = () => {
         setLoading(true);
 
-        const AUTH_URL = "http://localhost:5174/login";
+        const callbackUrl = new URL("http://localhost:5173/auth/callback");
+        callbackUrl.searchParams.set("returnTo", returnTo);
 
-        const callbackUrl = `http://localhost:5173/auth/callback?returnTo=${returnTo}`;
-        const redirectUrl = `${AUTH_URL}?return=${encodeURIComponent(callbackUrl)}&permission=age`;
-        window.location.href = redirectUrl;
+        const authorizeUrl = new URL("http://localhost:5551/authorize");
+        authorizeUrl.searchParams.set("return", callbackUrl.toString());
+        authorizeUrl.searchParams.set("permission", "age");
+
+        window.location.href = authorizeUrl.toString();
     };
 
     return (

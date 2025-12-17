@@ -9,6 +9,8 @@ import AuthRedirect from "./routes/AuthRedirect";
 
 import About from "./pages/About";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Сheckout";
+import Payment from "./pages/Payment";
 
 export default function App() {
     return (
@@ -22,6 +24,8 @@ export default function App() {
                         <Route path="/auth/redirect" element={<AuthRedirect />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/cart" element={<Cart />} />
+                        <Route path="/checkout" element={<Checkout />}></Route>
+                        <Route path="/payment" element={<Payment />}></Route>
                     </Routes>
                 </BrowserRouter>
             </CartProvider>
