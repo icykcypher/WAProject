@@ -192,6 +192,12 @@ app.post("/carts/:userId/buy", (req, res) => {
 });
 
 
+app.use(express.static(clientDist, { index: false }));
+
+app.use((req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+});
+
 app.listen(PORT, () => {
     console.log(`Eshop server running on http://localhost:${PORT}`);
 });
