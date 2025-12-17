@@ -1,3 +1,4 @@
+console.log("SERVER FILE LOADED");
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -6,7 +7,7 @@ let userIdSrvr = 0
 let listUsers = []
 
 const app = express();
-const PORT = 5000;
+const PORT = 8080;
 const authServerSecret = "smth";
 const products = [
     {
@@ -81,9 +82,9 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:userId", (req, res) => {
     const userId = req.params.userId;
-    curlen = listUsers.length
+    const curlen = listUsers.length
     listUsers = listUsers.filter(user => user.id !== Number(userId));
-    futurelen = listUsers.length
+    const futurelen = listUsers.length
     if(curlen === futurelen) return res.status(400).json({message: "user doesnt exist"})
     res.status(200).json({ success: true })
     delete carts[userId];
@@ -154,7 +155,7 @@ function validateToken(req, res, next) {
                 message: "audition is not eshop-service"
             });
         }
-        request.capability = decoded_token;
+        req.capability = decoded_token;
         next();
     } catch (err) {
         return res.status(401).json({
@@ -168,9 +169,9 @@ app.delete("/carts/:userId", (req, res) => {
   const { productId } = req.body;
   const userId = req.params.userId;
   if (!carts[userId]) return res.status(404).json({ message: "Cart not found" });
-  curcartslen = carts[userId].length
+  const curcartslen = carts[userId].length
   carts[userId] = carts[userId].filter(p => p.productId !== productId);
-  futurecartslen = carts[userId].length
+  const futurecartslen = carts[userId].length
   if (curcartslen === futurecartslen) {
     return res.status(400).json({ message: "product not found in cart" });
     }
@@ -180,7 +181,8 @@ app.delete("/carts/:userId", (req, res) => {
 
 app.post("/carts/:userId/buy", (req, res) => {
   const userId = req.params.userId;
-  if (!carts[userId]) return res.status(400).json({ message: "Cart is empty" });
+  if (!carts[userId] || carts[userId].length === 0) {
+  return res.status(400).json({ message: "Cart is empty" });}
   carts[userId].forEach(product => {
     const { productId, quantity } = product;
     products.find(p => p.id === productId).stock -= quantity;
