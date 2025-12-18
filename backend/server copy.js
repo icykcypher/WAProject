@@ -192,7 +192,7 @@ app.post("/carts/:userId/buy", (req, res) => {
   carts[userId] = []
 });
 
-const clientDist = "../frontend/dist"
+const clientDist = "../frontend"
 
 app.use(express.static(clientDist, { index: false }));
 

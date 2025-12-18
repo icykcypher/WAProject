@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../hooks/UseCart";
 import { useCountry } from "../utils/country";
 import Header from "../components/Header";
@@ -24,43 +24,44 @@ interface CanPurchaseResponse {
 }
 
 export default function Checkout() {
-    const { items, clearCart } = useCart();
+    const { items } = useCart();
     const navigate = useNavigate();
     const country = useCountry();
 
     const [cartWithPermissions, setCartWithPermissions] = useState<CartItemWithPermission[]>([]);
     const [loading, setLoading] = useState(false);
-
+    const [params] = useSearchParams();
+    console.log(params)
     useEffect(() => {
         if (items.length === 0) {
             setCartWithPermissions([]);
             return;
         }
-
+        
         const fetchPermissions = async () => {
             setLoading(true);
             try {
                 // Получаем capability токен (JWT уже в cookie)
-                const resToken = await fetch("http://localhost:5551/api/token", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include", // важно!
-                    body: JSON.stringify({
-                        address: "http://localhost:5173",
-                        permissions: ["age"],
-                    }),
-                });
+                // const resToken = await fetch("http://10.2.7.166:8081/api/token", {
+                //     method: "POST",
+                //     headers: { "Content-Type": "application/json" },
+                //     credentials: "include", // важно!
+                //     body: JSON.stringify({
+                //         address: "http://10.2.7.167:8080",
+                //         permissions: ["age"],
+                //     }),
+                // });
 
-                if (!resToken.ok) throw new Error("Not authenticated");
+                // if (!resToken.ok) throw new Error("Not authenticated");
 
-                const tokenData = await resToken.json();
-                const capabilityToken = tokenData.token;
+                // const tokenData = await resToken.json();
+                const capabilityToken = params.get("token");
 
                 // Проверяем каждый товар
                 const updatedItems = await Promise.all(
                     items.map(async item => {
                         try {
-                            const res = await fetch("http://localhost:5551/api/can-purchase", {
+                            const res = await fetch("http://10.2.7.166:8081/api/can-purchase", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",

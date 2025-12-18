@@ -15,7 +15,7 @@ export default function Product() {
 
     const handleAddToCart = async () => {
         try {
-            await fetch(`http://localhost:5000/carts/${userId}`, {
+            await fetch(`http://10.2.7.167:8080/carts/${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

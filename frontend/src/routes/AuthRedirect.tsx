@@ -1,16 +1,15 @@
 import { useState } from "react";
 
 export default function AuthRedirect() {
-    const returnTo = "/checkout";
+    //const returnTo = "/checkout";
     const [loading, setLoading] = useState(false);
 
     const handleClick = () => {
         setLoading(true);
 
-        const callbackUrl = new URL("http://localhost:5173/auth/callback");
-        callbackUrl.searchParams.set("returnTo", returnTo);
+        const callbackUrl = new URL("http://10.2.7.167:8080/checkout");
 
-        const authorizeUrl = new URL("http://localhost:5551/authorize");
+        const authorizeUrl = new URL("http://10.2.7.166:8081/authorize");
         authorizeUrl.searchParams.set("return", callbackUrl.toString());
         authorizeUrl.searchParams.set("permission", "age");
 
